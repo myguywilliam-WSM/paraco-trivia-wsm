@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paraco Trivia 2026: 80's &amp; 90's 🎉</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+    :root {
+      --neon-pink:    #ff2d78;
+      --neon-cyan:    #00e5ff;
+      --neon-yellow:  #ffe600;
+      --neon-green:   #39ff14;
+      --deep-purple:  #0d0020;
+      --mid-purple:   #1a0040;
+      --card-bg:      rgba(255,255,255,0.06);
+      --card-border:  rgba(255,255,255,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--deep-purple);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    /* ─── Animated grid floor ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0,229,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.07) 1px, transparent 1px);
+      background-size: 60px 60px;
+      background-position: center bottom;
+      transform: perspective(600px) rotateX(55deg) scaleX(1.6);
+      transform-origin: bottom center;
+      top: 40%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── Gradient sky ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,45,120,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 50% 100%, rgba(0,229,255,0.15) 0%, transparent 60%),
+                  linear-gradient(180deg, #0d0020 0%, #1a0040 50%, #0d0020 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ─── Stars ─── */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50%       { opacity: 0.1; transform: scale(0.5); }
+    }
+
+    /* ─── Main wrapper ─── */
+    #app {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 900px;
+      padding: 24px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      text-align: center;
+    }
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(18px, 3.5vw, 34px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--neon-cyan);
+      text-shadow:
+        0 0 6px var(--neon-cyan),
+        0 0 20px var(--neon-cyan),
+        0 0 50px rgba(0,229,255,0.5);
+      line-height: 1.2;
+    }
+    .header .sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 4px;
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+
+    /* ─── Progress bar ─── */
+    .progress-wrap {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
+      border-radius: 99px;
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+      box-shadow: 0 0 8px var(--neon-pink);
+    }
+    .progress-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      letter-spacing: 1px;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* ─── Question card ─── */
+    .card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 40px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 40px rgba(255,45,120,0.08), 0 20px 60px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(135deg, var(--neon-pink), transparent 40%, transparent 60%, var(--neon-cyan));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .q-number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--neon-pink);
+      text-shadow: 0 0 8px var(--neon-pink);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .q-text {
+      font-size: clamp(28px, 3.5vw, 36px);
+      font-weight: 700;
+      line-height: 1.4;
+      color: #fff;
+      margin-bottom: 28px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+
+    /* ─── Answer choices ─── */
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 560px) {
+      .card { padding: 28px 22px; }
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      font-size: 31px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      cursor: default;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .choice::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03));
+    }
+    .choice-letter {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    /* Correct answer highlight */
+    .choice.correct {
+      background: rgba(57, 255, 20, 0.12);
+      border-color: var(--neon-green);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(57,255,20,0.25), inset 0 0 20px rgba(57,255,20,0.05);
+      transform: scale(1.02);
+    }
+    .choice.correct .choice-letter {
+      background: var(--neon-green);
+      border-color: var(--neon-green);
+      color: #000;
+      box-shadow: 0 0 12px var(--neon-green);
+    }
+
+    /* ─── Controls ─── */
+    .controls {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 30px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:hover::before { opacity: 1; }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-reveal {
+      background: linear-gradient(135deg, var(--neon-pink), #c400a8);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255,45,120,0.5), 0 4px 20px rgba(255,45,120,0.3);
+    }
+    .btn-reveal:hover {
+      box-shadow: 0 0 30px rgba(255,45,120,0.7), 0 4px 30px rgba(255,45,120,0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, var(--neon-cyan), #0080ff);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0,229,255,0.4), 0 4px 20px rgba(0,229,255,0.25);
+    }
+    .btn-next:hover {
+      box-shadow: 0 0 30px rgba(0,229,255,0.6), 0 4px 30px rgba(0,229,255,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-next:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* ─── Card view transitions ─── */
+    .card-question, .card-answer {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .card-answer {
+      display: none;
+      opacity: 0;
+      transform: scale(0.97);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 340px;
+      padding: 20px 0;
+    }
+    .card-answer.show {
+      display: flex;
+      animation: answerReveal 0.4s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes answerReveal {
+      from { opacity: 0; transform: scale(0.93); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .answer-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 18px;
+    }
+    .answer-big {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      color: var(--neon-green);
+      text-shadow: 0 0 20px var(--neon-green), 0 0 60px rgba(57,255,20,0.4);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .answer-check {
+      font-size: 56px;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 0 12px rgba(57,255,20,0.6));
+    }
+    .answer-q-echo {
+      font-size: 15px;
+      color: rgba(255,255,255,0.35);
+      font-style: italic;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+
+    /* ─── Category badge ─── */
+    .category-badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: rgba(255,230,0,0.1);
+      border: 1px solid rgba(255,230,0,0.3);
+      color: var(--neon-yellow);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    /* ─── Title screen ─── */
+    #title-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      text-align: center;
+      padding: 30px;
+      background: var(--deep-purple);
+    }
+    #title-screen::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0,229,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.07) 1px, transparent 1px);
+      background-size: 60px 60px;
+      transform: perspective(600px) rotateX(55deg) scaleX(1.6);
+      transform-origin: bottom center;
+      top: 40%;
+      z-index: -1;
+    }
+    .title-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(28px, 6vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+    }
+    .title-logo .line1 {
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px var(--neon-pink), 0 0 40px rgba(255,45,120,0.5);
+      display: block;
+    }
+    .title-logo .line2 {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px var(--neon-cyan), 0 0 40px rgba(0,229,255,0.5);
+      display: block;
+      font-size: 0.6em;
+      letter-spacing: 8px;
+    }
+    .title-sub {
+      font-size: clamp(12px, 2vw, 18px);
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .title-categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .title-categories span {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .cat-pop   { background: rgba(255,45,120,0.15);  border: 1px solid var(--neon-pink);   color: var(--neon-pink); }
+    .cat-sport { background: rgba(0,229,255,0.1);     border: 1px solid var(--neon-cyan);   color: var(--neon-cyan); }
+    .cat-hist  { background: rgba(255,230,0,0.1);     border: 1px solid var(--neon-yellow); color: var(--neon-yellow); }
+    .cat-biz   { background: rgba(57,255,20,0.1);     border: 1px solid var(--neon-green);  color: var(--neon-green); }
+
+    .q-count-info {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 2px;
+    }
+
+    /* ─── End screen ─── */
+    #end-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      text-align: center;
+      padding: 30px;
+      background: var(--deep-purple);
+    }
+    #end-screen.show { display: flex; }
+    .end-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(22px, 5vw, 52px);
+      font-weight: 900;
+      color: var(--neon-yellow);
+      text-shadow: 0 0 15px var(--neon-yellow), 0 0 50px rgba(255,230,0,0.4);
+      letter-spacing: 4px;
+    }
+    .end-sub {
+      font-size: 18px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 2px;
+    }
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    /* ─── Transition ─── */
+    .slide-in {
+      animation: slideIn 0.4s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ─── Decorative retro sun ─── */
+    .retro-sun {
+      position: fixed;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      height: 140px;
+      border-radius: 140px 140px 0 0;
+      background: linear-gradient(180deg, var(--neon-yellow) 0%, var(--neon-pink) 100%);
+      opacity: 0.08;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .retro-sun::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 12px,
+        var(--deep-purple) 12px,
+        var(--deep-purple) 16px
+      );
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Retro sun -->
+  <div class="retro-sun"></div>
+
+  <!-- Title Screen -->
+  <div id="title-screen">
+    <div class="title-logo">
+      <span class="line1">Paraco Trivia 2026</span>
+      <span class="line2">80's &amp; 90's</span>
+    </div>
+    <p class="title-sub">Pop Culture · Sports · History · Business</p>
+    <div class="title-categories">
+      <span class="cat-pop">🎬 Pop Culture</span>
+      <span class="cat-sport">🏀 Sports</span>
+      <span class="cat-hist">🌍 History</span>
+      <span class="cat-biz">💼 Business</span>
+    </div>
+    <p class="q-count-info">15 Questions</p>
+    <button class="btn btn-reveal" onclick="startGame()" style="font-size:14px; padding:18px 44px; margin-top:8px;">
+      ▶ &nbsp; Start Game
+    </button>
+  </div>
+
+  <!-- End Screen -->
+  <div id="end-screen">
+    <div class="end-title">🎉 That's a Wrap!</div>
+    <p class="end-sub">Thanks for playing — hope you crushed it! 🕹️</p>
+    <button class="btn btn-reveal" onclick="restartGame()" style="font-size:12px; padding:14px 32px; margin-top:8px;">
+      ↺ &nbsp; Play Again
+    </button>
+  </div>
+
+  <!-- Confetti -->
+  <div class="confetti-container" id="confetti"></div>
+
+  <!-- Main App -->
+  <div id="app">
+    <div class="header">
+      <h1>Paraco Trivia 2026: 80's &amp; 90's</h1>
+      <p class="sub">Pop Culture · Sports · History · Business</p>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-label" id="progress-label">0 / 15</div>
+    </div>
+
+    <div class="card slide-in" id="question-card">
+      <!-- Question view -->
+      <div class="card-question" id="card-question">
+        <div class="q-number" id="q-number">Question 1 of 15</div>
+        <div class="category-badge" id="q-category">Category</div>
+        <div class="q-text" id="q-text">Loading…</div>
+        <div class="choices" id="choices"></div>
+      </div>
+      <!-- Answer view -->
+      <div class="card-answer" id="card-answer">
+        <div class="answer-check">✅</div>
+        <div class="answer-label">Correct Answer</div>
+        <div class="answer-big" id="answer-text"></div>
+        <div class="answer-q-echo" id="answer-q-echo"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-reveal" id="btn-reveal" onclick="revealAnswer()">Reveal Answer</button>
+      <button class="btn btn-next"   id="btn-next"   onclick="nextQuestion()" disabled>Next Question ›</button>
+    </div>
+  </div>
+
+<script>
+  // ─── Data ───────────────────────────────────────────────────────────────────
+  const questions = [
+    { category: "🏀 Sports",       q: "Michael Jordan shocked the world in 1993 by retiring from basketball to pursue a career in what sport?",                    choices: ["Golf","Tennis","Baseball","Boxing"],                                            correct: 2 },
+    { category: "🏀 Sports",       q: "Which American gymnast became a national hero after her gold medal performance at the 1984 Los Angeles Olympics?",          choices: ["Kerri Strug","Nadia Comaneci","Shannon Miller","Mary Lou Retton"],             correct: 3 },
+    { category: "🏀 Sports",       q: "At which Winter Olympics did the US hockey team pull off the legendary 'Miracle on Ice' against the Soviet Union?",        choices: ["1976 Innsbruck","1980 Lake Placid","1984 Sarajevo","1988 Calgary"],           correct: 1 },
+    { category: "🏀 Sports",       q: "Tiger Woods became famous for always wearing which color shirt on the final day of golf tournaments?",                      choices: ["Blue","Black","Red","Green"],                                                   correct: 2 },
+    { category: "🏀 Sports",       q: "Hockey legend Wayne Gretzky — 'The Great One' — was traded to which team in 1988, stunning the sports world?",             choices: ["Detroit Red Wings","New York Rangers","Pittsburgh Penguins","Los Angeles Kings"], correct: 3 },
+    { category: "🎵 Music",        q: "Which Norwegian band's 1985 music video for 'Take On Me' featured a groundbreaking hand-drawn pencil animation?",          choices: ["Duran Duran","Tears for Fears","a-ha","A Flock of Seagulls"],                  correct: 2 },
+    { category: "🎵 Music",        q: "Whitney Houston's iconic 'I Will Always Love You' appeared on the soundtrack of which 1992 film?",                         choices: ["Pretty Woman","Ghost","Sleepless in Seattle","The Bodyguard"],                  correct: 3 },
+    { category: "🎵 Music",        q: "What nickname was given to MC Hammer's signature baggy harem-style trousers?",                                              choices: ["Parachute Pants","Genie Pants","Hammer Pants","Fly Pants"],                     correct: 2 },
+    { category: "🎵 Music",        q: "Justin Timberlake and JC Chasez both got their start in which famous 90s group before going solo?",                        choices: ["Backstreet Boys","98 Degrees","New Kids on the Block","*NSYNC"],               correct: 3 },
+    { category: "🎵 Music",        q: "What was the name of Michael Jackson's beloved pet chimpanzee who became almost as famous as his owner?",                  choices: ["Coco","Bingo","Bubbles","Sparky"],                                              correct: 2 },
+    { category: "💼 Business",     q: "Which holiday toy caused near-riots in stores across America during Christmas 1996?",                                       choices: ["Furby","Tamagotchi","Power Rangers","Tickle Me Elmo"],                         correct: 3 },
+    { category: "💼 Business",     q: "The Tamagotchi — the handheld digital pet kids couldn't put down in the 90s — was made by which company?",                choices: ["Nintendo","Sega","Casio","Bandai"],                                             correct: 3 },
+    { category: "💼 Business",     q: "The Sony Walkman, which defined how people listened to music throughout the 80s, was first released in what year?",        choices: ["1977","1979","1981","1983"],                                                    correct: 1 },
+    { category: "💼 Business",     q: "Which video rental giant dominated the 90s with nearly 9,000 locations before being disrupted by the internet?",           choices: ["Hollywood Video","Movie Gallery","Blockbuster","Family Video"],                 correct: 2 },
+    { category: "💼 Business",     q: "The Sega Genesis flew off shelves in the early 90s largely because it came bundled with which game?",                      choices: ["Streets of Rage","Mortal Kombat","Sonic the Hedgehog","Aladdin"],              correct: 2 },
+    { category: "🎬 Pop Culture",  q: "In 'The Fresh Prince of Bel-Air,' what was the last name of Will Smith's wealthy Bel-Air relatives?",                      choices: ["Hilton","Carlton","Banks","Smith"],                                             correct: 2 },
+    { category: "🎬 Pop Culture",  q: "What was the name of the giant marshmallow monster that terrorized New York City in the original 1984 'Ghostbusters'?",    choices: ["Slimer","Zuul","Gozer","Stay Puft"],                                            correct: 3 },
+    { category: "🎬 Pop Culture",  q: "What was the name of the high school in the beloved Saturday morning 90s show 'Saved by the Bell'?",                       choices: ["Westside","Hillside","Lakeside","Bayside"],                                     correct: 3 },
+    { category: "🎬 Pop Culture",  q: "Which 1991 Disney film features the iconic ballroom scene and the song 'Be Our Guest'?",                                   choices: ["The Little Mermaid","Aladdin","Beauty and the Beast","The Lion King"],         correct: 2 },
+    { category: "🎬 Pop Culture",  q: "Which 80s toy line — featuring hero He-Man and villain Skeletor — had kids glued to their TVs every morning?",            choices: ["G.I. Joe","Thundercats","Voltron","Masters of the Universe"],                   correct: 3 },
+  ];
+
+  const LETTERS = ['A','B','C','D'];
+  let current = 0;
+  let revealed = false;
+  let shuffledQuestions = [];
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ─── Stars ────────────────────────────────────────────────────────────────
+  (function generateStars() {
+    const container = document.getElementById('stars');
+    for (let i = 0; i < 120; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left  = Math.random() * 100 + '%';
+      s.style.top   = Math.random() * 55 + '%';
+      s.style.setProperty('--d',     (2 + Math.random() * 4) + 's');
+      s.style.setProperty('--delay', (Math.random() * 5) + 's');
+      const size = 1 + Math.random() * 2.5;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      container.appendChild(s);
+    }
+  })();
+
+  // ─── Game control ──────────────────────────────────────────────────────────
+  function startGame() {
+    shuffledQuestions = shuffle(questions);
+    document.getElementById('title-screen').style.display = 'none';
+    loadQuestion(0);
+  }
+
+  function restartGame() {
+    shuffledQuestions = shuffle(questions);
+    current = 0;
+    revealed = false;
+    document.getElementById('end-screen').classList.remove('show');
+    document.getElementById('progress-fill').style.width = '0%';
+    document.getElementById('progress-label').textContent = '0 / ' + shuffledQuestions.length;
+    loadQuestion(0);
+  }
+
+  function loadQuestion(index) {
+    revealed = false;
+    const data = shuffledQuestions[index];
+    const card = document.getElementById('question-card');
+
+    // Animate in
+    card.classList.remove('slide-in');
+    void card.offsetWidth; // reflow
+    card.classList.add('slide-in');
+
+    document.getElementById('q-number').textContent    = `Question ${index + 1} of ${shuffledQuestions.length}`;
+    document.getElementById('q-category').textContent  = data.category;
+    document.getElementById('q-text').textContent      = data.q;
+
+    // Choices
+    const choicesEl = document.getElementById('choices');
+    choicesEl.innerHTML = '';
+    data.choices.forEach((text, i) => {
+      const div = document.createElement('div');
+      div.className = 'choice';
+      div.id = 'choice-' + i;
+      div.innerHTML = `<span class="choice-letter">${LETTERS[i]}</span><span>${text}</span>`;
+      choicesEl.appendChild(div);
+    });
+
+    // Reset views — clear transition first so opacity snaps back instantly
+    const qView = document.getElementById('card-question');
+    qView.style.transition = 'none';
+    qView.style.opacity = '1';
+    qView.style.display = 'block';
+    void qView.offsetWidth; // force reflow so transition: none takes effect
+    const answerView = document.getElementById('card-answer');
+    answerView.classList.remove('show');
+    answerView.style.display = 'none';
+    document.getElementById('answer-text').textContent = '';
+    document.getElementById('answer-q-echo').textContent = '';
+
+    // Buttons
+    document.getElementById('btn-reveal').disabled = false;
+    document.getElementById('btn-reveal').style.opacity = '1';
+    document.getElementById('btn-next').disabled = true;
+
+    // Progress
+    const pct = (index / shuffledQuestions.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = index + ' / ' + shuffledQuestions.length;
+  }
+
+  function revealAnswer() {
+    if (revealed) return;
+    revealed = true;
+
+    const data = shuffledQuestions[current];
+
+    // Fade out question view, then swap to answer view
+    const qView = document.getElementById('card-question');
+    qView.style.transition = 'opacity 0.2s ease';
+    qView.style.opacity = '0';
+
+    setTimeout(() => {
+      qView.style.display = 'none';
+
+      // Populate answer view
+      document.getElementById('answer-text').textContent =
+        LETTERS[data.correct] + '. ' + data.choices[data.correct];
+      document.getElementById('answer-q-echo').textContent = data.q;
+
+      const answerView = document.getElementById('card-answer');
+      answerView.style.display = '';   // clear inline style so CSS class can take over
+      answerView.classList.add('show');
+    }, 220);
+
+    // Button states
+    document.getElementById('btn-reveal').disabled = true;
+    document.getElementById('btn-reveal').style.opacity = '0.4';
+
+    const isLast = current === shuffledQuestions.length - 1;
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.disabled = false;
+    nextBtn.textContent = isLast ? 'Finish Game ✓' : 'Next Question ›';
+  }
+
+  function nextQuestion() {
+    if (!revealed) return;
+    if (current === shuffledQuestions.length - 1) {
+      showEndScreen();
+      return;
+    }
+    current++;
+    loadQuestion(current);
+  }
+
+  function showEndScreen() {
+    // Update progress to 100%
+    document.getElementById('progress-fill').style.width = '100%';
+    document.getElementById('progress-label').textContent = shuffledQuestions.length + ' / ' + shuffledQuestions.length;
+
+    document.getElementById('end-screen').classList.add('show');
+    launchConfetti();
+  }
+
+  // ─── Confetti ──────────────────────────────────────────────────────────────
+  function launchConfetti() {
+    const container = document.getElementById('confetti');
+    container.innerHTML = '';
+    const colors = ['#ff2d78','#00e5ff','#ffe600','#39ff14','#c400a8','#ff6b35'];
+    for (let i = 0; i < 120; i++) {
+      const c = document.createElement('div');
+      const size = 6 + Math.random() * 10;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      c.style.cssText = `
+        position:absolute;
+        left:${Math.random()*100}%;
+        top:-20px;
+        width:${size}px;
+        height:${size * (0.4 + Math.random() * 0.8)}px;
+        background:${color};
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+        opacity:${0.7 + Math.random() * 0.3};
+        animation: fall ${1.5 + Math.random() * 2}s ease-in ${Math.random() * 0.8}s forwards;
+        transform: rotate(${Math.random()*360}deg);
+      `;
+      container.appendChild(c);
+    }
+    // Inject keyframes once
+    if (!document.getElementById('fall-kf')) {
+      const style = document.createElement('style');
+      style.id = 'fall-kf';
+      style.textContent = `@keyframes fall {
+        to { top: 110vh; transform: rotate(${Math.random()*720}deg) translateX(${(Math.random()-0.5)*200}px); opacity:0; }
+      }`;
+      document.head.appendChild(style);
+    }
+  }
+
+  // ─── Keyboard shortcuts ────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (!revealed) revealAnswer();
+      else nextQuestion();
+    }
+  });
+</script>
+</body>
+</html>
